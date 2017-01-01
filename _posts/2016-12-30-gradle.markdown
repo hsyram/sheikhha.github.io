@@ -1,0 +1,43 @@
+---
+layout: post
+title:  "Gradle"
+date:   2016-12-30 23:00:06 +0200
+categories: jekyll update
+---
+<h2>Useful commands:</h2>
+<br/>
+On Mac/Linux
+{% highlight bash %}
+./gradlew
+{% endhighlight %}
+
+On Windows
+{% highlight bash %}
+gradlew
+{% endhighlight %}
+The Gradle wrapper is a script that will download and install a
+specified version of Gradle, If we haven't installed Gradle yet.
+<br/>
+
+{% highlight bash %}
+./gradlew tasks
+{% endhighlight %}
+Shows All tasks runnable from root project
+<br/>
+
+{% highlight bash %}
+./gradlew myTaskName
+{% endhighlight %}
+Runs <i>'myTaskName'</i> from  <b>build.gradle</b> (default build script)
+<br/>
+
+{% highlight bash %}
+./gradlew  -b myFile.gradle myTaskName
+{% endhighlight %}
+To tell Gradle to use <b>myFile.gradle</b> file as the build script instead of the
+default build.gradle.
+<br/>
+<br/>
+
+<h2>Gradle installation</h2>
+Use [This file]({{ site.url }}/assets/build.gradle) file.

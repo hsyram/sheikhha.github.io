@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Effective Java Summery</title>
-  <meta name="description" content="1. Creating and Destroying Objects Item 1: Description">
+  <meta name="description" content="1. Creating and Destroying Objects Item 1: Consider static factory methods instead of constructors A class can provide a public static factory method, which ...">
 
   <link rel="stylesheet" href="/assets/main.css">
   <link rel="canonical" href="http://localhost:4000/java/2016/12/26/Effective-java-summery.html">
@@ -67,8 +67,90 @@
 
   <div class="post-content" itemprop="articleBody">
     <h2> 1. Creating and Destroying Objects</h2>
-<h3>Item 1:</h3>
-<h5>Description</h5>
+<h3>Item 1: Consider static factory methods instead of constructors</h3>
+<p>A class can provide a public static factory method, which is simply a static method that returns an instance of the class.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Boolean</span> <span class="nf">valueOf</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+       <span class="k">return</span> <span class="n">b</span> <span class="o">?</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">TRUE</span> <span class="o">:</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">FALSE</span><span class="o">;</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Note that a static factory method is not the same as the Factory Method pattern from Design Patterns.</p>
+
+<h4>Advantages and Disadvantages</h4>
+<ul>Advantages:
+<li>Unlike constructors, they have names.</li>
+<li>Unlike constructors, they are not required to create a new object each time they’re invoked.</li>
+<li>Unlike constructors, they can return an object of any subtype of their return type.</li>
+<li>They reduce the verbosity of creating parameterized type instances.</li>
+
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;();</span>
+
+<span class="c1">//With static factories, the compiler can figure out the type parameters for you.</span>
+<span class="c1">//This is known as type inference.</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+       <span class="k">return</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;();</span>
+<span class="o">}</span>
+<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">HashMap</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span></code></pre></figure>
+
+</ul>
+<p><br /></p>
+
+<ul>Disadvantages:
+<li>The main disadvantage of providing only static factory methods is that classes without public or protected constructors cannot be subclassed.</li>
+<li>They are not readily distinguishable from other static methods.</li>
+</ul>
+<p><br /></p>
+
+<ul>Here are some common names for static factory methods:
+<li><b>valueOf—</b> Returns an instance that has, loosely speaking, the same value as its parameters. Such static factories are effectively type-conversion methods.</li>
+<li><b>of—</b> A concise alternative to valueOf, popularized by EnumSet (Item 32).</li>
+<li><b>getInstance—</b> Returns an instance that is described by the parameters but cannot be said to have the same value. In the case of a singleton, getInstance takes no parameters and returns the sole instance.</li>
+<li><b>newInstance—</b> Like getInstance, except that newInstance guarantees that each instance returned is distinct from all others.</li>
+<li><b>getType—</b> Like getInstance, but used when the factory method is in a differ- ent class. Type indicates the type of object returned by the factory method.</li>
+<li><b>newType—</b> Like newInstance, but used when the factory method is in a differ- ent class. Type indicates the type of object returned by the factory method.</li>
+</ul>
+<p><br /></p>
+
+<h4>service provider frameworks:</h4>
+<p>The class of the object returned by a static factory method need not even exist at the time the class containing the method is written. Such flexible static factory methods form the basis of service provider frameworks</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// Service provider framework sketch</span>
+   <span class="c1">// Service interface</span>
+   <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Service</span> <span class="o">{</span>
+       <span class="o">...</span> <span class="c1">// Service-specific methods go here</span>
+<span class="o">}</span>
+   <span class="c1">// Service provider interface</span>
+   <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Provider</span> <span class="o">{</span>
+       <span class="n">Service</span> <span class="nf">newService</span><span class="o">();</span>
+<span class="o">}</span>
+   <span class="c1">// Noninstantiable class for service registration and access</span>
+   <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Services</span> <span class="o">{</span>
+       <span class="kd">private</span> <span class="nf">Services</span><span class="o">()</span> <span class="o">{</span> <span class="o">}</span>  <span class="c1">// Prevents instantiation (Item 4)</span>
+       <span class="c1">// Maps service names to services</span>
+       <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Provider</span><span class="o">&gt;</span> <span class="n">providers</span> <span class="o">=</span>
+           <span class="k">new</span> <span class="n">ConcurrentHashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Provider</span><span class="o">&gt;();</span>
+       <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">DEFAULT_PROVIDER_NAME</span> <span class="o">=</span> <span class="s">"&lt;def&gt;"</span><span class="o">;</span>
+       <span class="c1">// Provider registration API</span>
+       <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">registerDefaultProvider</span><span class="o">(</span><span class="n">Provider</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
+           <span class="n">registerProvider</span><span class="o">(</span><span class="n">DEFAULT_PROVIDER_NAME</span><span class="o">,</span> <span class="n">p</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">registerProvider</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Provider</span> <span class="n">p</span><span class="o">){</span>
+           <span class="n">providers</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">p</span><span class="o">);</span>
+       <span class="o">}</span>
+       <span class="c1">// Service access API</span>
+       <span class="kd">public</span> <span class="kd">static</span> <span class="n">Service</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+           <span class="k">return</span> <span class="nf">newInstance</span><span class="o">(</span><span class="n">DEFAULT_PROVIDER_NAME</span><span class="o">);</span>
+       <span class="o">}</span>
+       <span class="kd">public</span> <span class="kd">static</span> <span class="n">Service</span> <span class="nf">newInstance</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+           <span class="n">Provider</span> <span class="n">p</span> <span class="o">=</span> <span class="n">providers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+           <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+               <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span>
+                   <span class="s">"No provider registered with name: "</span> <span class="o">+</span> <span class="n">name</span><span class="o">);</span>
+           <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="na">newService</span><span class="o">();</span>
+       <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
 
   </div>
 

@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Your awesome title</title>
-  <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search resu...">
+  <title>Gradle</title>
+  <meta name="description" content="Useful commands: On Mac/Linux ./gradlew">
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/">
+  <link rel="canonical" href="http://localhost:4000/jekyll/update/2016/12/30/gradle.html">
   <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="/feed.xml">
   
   
@@ -58,44 +58,52 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Gradle</h1>
+    <p class="post-meta"><time datetime="2016-12-30T23:00:06+02:00" itemprop="datePublished">Dec 30, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2>Useful commands:</h2>
+<p><br />
+On Mac/Linux</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">./gradlew</code></pre></figure>
+
+<p>On Windows</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">gradlew</code></pre></figure>
+
+<p>The Gradle wrapper is a script that will download and install a
+specified version of Gradle, If we haven’t installed Gradle yet.
+<br /></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">./gradlew tasks</code></pre></figure>
+
+<p>Shows All tasks runnable from root project
+<br /></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">./gradlew myTaskName</code></pre></figure>
+
+<p>Runs <i>‘myTaskName’</i> from  <b>build.gradle</b> (default build script)
+<br /></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">./gradlew  -b myFile.gradle myTaskName</code></pre></figure>
+
+<p>To tell Gradle to use <b>myFile.gradle</b> file as the build script instead of the
+default build.gradle.
+<br />
+<br /></p>
+
+<h2>Gradle installation</h2>
+<p>Use <a href="http://localhost:4000/assets/build.gradle">This file</a> file.</p>
+
+  </div>
+
   
-  
-
-
-  <ul class="post-list">
-    
-      <li>
-        <span class="post-meta">Dec 30, 2016</span>
-
-        <h2>
-          <a class="post-link" href="/jekyll/update/2016/12/30/gradle.html">Gradle</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Dec 26, 2016</span>
-
-        <h2>
-          <a class="post-link" href="/jekyll/update/2016/12/26/welcome-to-jekyll.html">Welcome to Jekyll!</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Dec 26, 2016</span>
-
-        <h2>
-          <a class="post-link" href="/java/2016/12/26/Effective-java-summery.html">Effective Java Summery</a>
-        </h2>
-      </li>
-    
-  </ul>
-
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
-
-</div>
+</article>
 
       </div>
     </main>
